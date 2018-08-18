@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de-de" lang="de-de" dir="ltr">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>mka_ical - Help</title>
+	<link href="textpattern.css" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+	
+		#mka_ical code {
+			font-weight:bold;
+			font: 105%/130% "Courier New", courier, monospace;
+			background-color: #FFFFCC;
+		}
+		#mka_ical code.block {
+			font-weight:normal;
+			border:1px dotted #999;
+			background-color: #FFFFCC;
+			display:block;
+			margin:10px 10px 20px;
+			padding:10px;
+		}	
+	</style>
+</head>
+<body>
+
+<table cellpadding="3" cellspacing="0" border="0" id="edit" align="center">
+	<tr><td width="600"><p>Extracted and Textile processed help section follows&#8230;</p><hr/></td></tr>
+	<tr><td width="600">
+<!-- CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT -->
+<!-- CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT -->	
+<div id="mka_ical">
+
+<h1>mka_ical - Help</h1>
+
+<p style="color:red;"><strong>
+The help section is not complete so if you have any questions please write a comment.<br/>
+<a href="http://kozianka-online.de/mka_ical">http://kozianka-online.de/mka_ical</a>
+</strong></p>
+
+
+<p>With the mka_ical plugin it is possible to display Events from iCal URL or File (e.g. Google Calendar).<br/>
+The plugin makes use of SG-iCalendar by Morten Fangel (http://sevengoslings.net/icalendar)</p>
+<h2>How to use</h2>
+
+<h3>Example 1 (Using a public Google Calendar)</h3>
+<pre class="block"><code class="block">&lt;txp:mka_ical googlemail=&quot;YOURADDRESSNAME@googlemail.com&quot; /&gt;</code></pre>
+<ul>
+	<li><strong>googlemail</strong>: Your GoogleMail address.</li>
+</ul>
+<br/>
+
+
+<h3>Example 2 (Using some options)</h3>
+<pre class="block"><code class="block">&lt;txp:mka_ical url=&quot;http://url.of.ics.file/calendar.ics&quot; 
+	pastevents=&quot;1&quot;  limit=&quot;0&quot;
+	img=&quot;1&quot; imgfolder=&quot;images/termine/&quot; defaultimg=&quot;none.gif&quot; /&gt;</code></pre>
+<ul>
+	<li><strong>url</strong>: URL of a Calendar File</li>
+	<li><strong>pastevents</strong>: [0,1] Show past events?</li>
+	<li><strong>limit</strong>: [0,1,2,3,4,..] Show only X events</li>
+	<li><strong>img</strong>: [0,1] Show images?</li>
+	<li><strong>imgfolder</strong>: Where are the images?</li>
+	<li><strong>defaultimg</strong>: Name of the default image</li>
+</ul>
+<br/>
+
+<h2>Output</h2>
+<pre><code class="block">
+&lt;ul id=&quot;icalevents&quot;&gt;
+	&lt;li&gt;
+		[&lt;img src=&quot;images/image.png&quot; border=&quot;0&quot; /&gt;]
+		&lt;span class=&quot;date&quot;&gt;01.01.1111 11:11&lt;/span&gt;
+		&lt;span class=&quot;title&quot;&gt;TITLE&lt;/span&gt;
+		[&lt;p class=&quot;description&quot;&gt;DESCRIPTION&lt;/p&gt;]
+	&lt;/li&gt;
+	[...]
+&lt;/ul&gt;
+</code></pre>
+<br/>
+
+<h2>CSS Template</h2>
+<pre><code class="block">
+ul#icalevents {
+}
+
+ul#icalevents li {
+}
+
+ul#icalevents li img {
+}
+
+ul#icalevents li span.date {
+}
+
+ul#icalevents li span.title {
+}
+
+ul#icalevents li p.description {
+}
+</code></pre>
+
+<h2>Attributes</h2>
+
+<pre><code class="block">
+url (string, default: "", required)
+Link to the ICS-File
+
+googlemail
+GoogleMail address (calendar must be public)
+
+limit (int, default:0, optional)
+Defines how many events are shown. Defaults to 0 (means all)
+
+pastevents  (boolean, default: FALSE, optional)
+Display past events
+
+cssid (string, default: "icalevents", optional)
+Sets the id for the event list 
+
+cssclass
+Sets the CSS-Class for the event list 
+
+details (boolean, default: TRUE, optional)
+Display the details
+
+cachingtime (int, default: 5 (minutes), optional)
+local caching
+
+fmtTime (string, default: "H:i", optional)
+Format String for the Time
+
+fmtDate (string, default: "d.m.Y", optional)
+Format String for the date
+
+img (boolean, default: FALSE)
+Display an image for each date (requires following attributes)
+
+imgfolder (string, default: "images", optional)
+image folder
+
+imgfolder (string, default: "images", optional)
+image folder
+
+defaultimg (string, default: "none.gif", optional)
+default image
+</code></pre>
+
+
+</div>
+<!-- CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT -->
+<!-- CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT -->	
+	</td></tr>
+</table>
+
+</body>
+</html>

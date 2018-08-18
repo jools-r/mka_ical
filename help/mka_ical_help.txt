@@ -1,0 +1,33 @@
+mka_ical
+
+Description:
+
+This plugin provides a txp-Tag mka_ical which makes it
+easy to display dates of an ICS-Calendar-File.
+
+It makes use of a PHP-Class called SG_iCalReader by Morten Fangel.
+
+Examples:
+
+<txp:mka_ical />
+
+
+
+CSS
+
+ul#icalevents {
+
+}
+
+ul#icalevents li {
+
+}
+
+ul#icalevents li img {
+
+}
+
+ul#icalevents li br {
+
+}
+

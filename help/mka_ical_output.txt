@@ -1,0 +1,10 @@
+
+<ul id="icalevents">
+	<li>
+		[<img class="image" src="images/image.png" border="0" />]
+		<span class="date">01.01.1111 11:11</span>
+		<span class="title">TITLE</span>
+		[<p class="description">DESCRIPTION</p>]
+	</li>
+	[...]
+</ul>
