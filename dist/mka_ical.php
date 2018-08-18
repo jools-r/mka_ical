@@ -1,6 +1,6 @@
 <?php
 
-// This is a PLUGIN TEMPLATE.
+// This is a PLUGIN TEMPLATE for Textpattern CMS.
 
 // Copy this file to a new name like abc_myplugin.php.  Edit the code, then
 // run this file at the command line to produce a plugin for distribution:
@@ -17,9 +17,9 @@ $plugin['name'] = 'mka_ical';
 // 1 = Plugin help is in raw HTML.  Not recommended.
 # $plugin['allow_html_help'] = 1;
 
-$plugin['version'] = '0.6.4';
+$plugin['version'] = '0.6.5';
 $plugin['author'] = 'Martin Kozianka';
-$plugin['author_uri'] = 'http://kozianka-online.de/';
+$plugin['author_uri'] = 'http://kozianka.de/';
 $plugin['description'] = 'Display events from an ical-File (Google Calendar, ...)';
 
 // Plugin load order:
@@ -31,10 +31,12 @@ $plugin['description'] = 'Display events from an ical-File (Google Calendar, ...
 $plugin['order'] = '5';
 
 // Plugin 'type' defines where the plugin is loaded
-// 0 = public       : only on the public side of the website (default)
-// 1 = public+admin : on both the public and admin side
-// 2 = library      : only when include_plugin() or require_plugin() is called
-// 3 = admin        : only on the admin side
+// 0 = public              : only on the public side of the website (default)
+// 1 = public+admin        : on both the public and admin side
+// 2 = library             : only when include_plugin() or require_plugin() is called
+// 3 = admin               : only on the admin side (no AJAX)
+// 4 = admin+ajax          : only on the admin side (AJAX supported)
+// 5 = public+admin+ajax   : on both the public and admin side (AJAX supported)
 $plugin['type'] = '0';
 
 // Plugin "flags" signal the presence of optional capabilities to the core plugin loader.
@@ -45,26 +47,41 @@ if (!defined('PLUGIN_LIFECYCLE_NOTIFY')) define('PLUGIN_LIFECYCLE_NOTIFY', 0x000
 
 $plugin['flags'] = '0';
 
+// Plugin 'textpack' is optional. It provides i18n strings to be used in conjunction with gTxt().
+// Syntax:
+// ## arbitrary comment
+// #@event
+// #@language ISO-LANGUAGE-CODE
+// abc_string_name => Localized String
+
+/** Uncomment me, if you need a textpack
+$plugin['textpack'] = <<< EOT
+#@admin
+#@language en-gb
+abc_sample_string => Sample String
+abc_one_more => One more
+#@language de-de
+abc_sample_string => Beispieltext
+abc_one_more => Noch einer
+EOT;
+**/
+// End of textpack
+
 if (!defined('txpinterface'))
         @include_once('zem_tpl.php');
 
 # --- BEGIN PLUGIN CODE ---
+// TXP 4.6 tag registration
+if (class_exists('\Textpattern\Tag\Registry')) {
+	Txp::get('\Textpattern\Tag\Registry')
+		->register('mka_ical')
+	;
+}
+
 // load SG_Ical
 // https://github.com/fangel/SG-iCalendar
 
 require_once(txpath.'/lib/sgical/SG_iCal.php');
-
-require_once(txpath.'/lib/sgical/blocks/SG_iCal_VCalendar.php');
-require_once(txpath.'/lib/sgical/blocks/SG_iCal_VEvent.php');
-require_once(txpath.'/lib/sgical/blocks/SG_iCal_VTimeZone.php');
-
-require_once(txpath.'/lib/sgical/helpers/SG_iCal_Duration.php');
-require_once(txpath.'/lib/sgical/helpers/SG_iCal_Factory.php');
-require_once(txpath.'/lib/sgical/helpers/SG_iCal_Freq.php');
-require_once(txpath.'/lib/sgical/helpers/SG_iCal_Line.php');
-require_once(txpath.'/lib/sgical/helpers/SG_iCal_Parser.php');
-require_once(txpath.'/lib/sgical/helpers/SG_iCal_Query.php');
-require_once(txpath.'/lib/sgical/helpers/SG_iCal_Recurrence.php');
 
 function mka_ical($atts, $thing = '') {
 	$time_start = microtime(true);
@@ -181,7 +198,7 @@ function mka_ical($atts, $thing = '') {
 			$out[] = parse(str_replace($keys, $vals, $body));
 
 			$i++; // Count for attr limit
-		} // If ($evt->getEnd() > time() && ($limit == 0  || $i <= $limit ))
+		} // if ($evt->getEnd() > time() && ($limit == 0  || $i <= $limit ))
 
 	}
 
@@ -315,7 +332,7 @@ function ical_formatText($string) {
 	$string = preg_replace_callback("#(^|[\n ])([\w]+?://.*?[^ \"\n\r\t<]*)#is", "ical_shorten_link", $string);
 	$string = preg_replace("#(^|[\n ])((www|ftp)\.[\w\-]+\.[\w\-.\~]+(?:/[^ \"\t\n\r<]*)?)#is", "$1<a href=\"http://$2\">$2</a>", $string);
 	$string = str_replace("\n","<br/>",$string);
-	$string = utf8_decode(trim($string));
+//	$string = utf8_decode(trim($string));
 	return $string;
 }
 
@@ -364,13 +381,14 @@ function getEvents($urls) {
 
 function getPlainEvent($evt) {
 	$plainEvent = new stdClass;
-	$plainEvent->start = $evt->getStart()." -- ".date("d.m.Y H:i", $evt->getStart());
-	$plainEvent->end = $evt->getEnd();
-	$plainEvent->duration = $evt->getDuration();
-	$plainEvent->sum = $evt->getSummary();
-	$plainEvent->des = $evt->getDescription();
-	$plainEvent->loc = $evt->getLocation();
-	$plainEvent->url = $evt->getEventUrl();
+//	$plainEvent->start = $evt->getStart()." -- ".date("d.m.Y H:i", $evt->getStart());
+	$plainEvent->start     = $evt->getStart();
+	$plainEvent->end       = $evt->getEnd();
+	$plainEvent->duration  = $evt->getDuration();
+	$plainEvent->sum       = $evt->getSummary();
+	$plainEvent->des       = $evt->getDescription();
+	$plainEvent->loc       = $evt->getLocation();
+	$plainEvent->url       = $evt->getEventUrl();
 	$rec = $evt->getProperty('recurrence');
 	if ($rec === null) {
 		$plainEvent->rec = false;
@@ -408,12 +426,12 @@ if (0) {
 <!--
 # --- BEGIN PLUGIN CSS ---
 <style type="text/css">
-	#txp_mka code {
+	#mka_ical code {
 		font-weight:bold;
 		font: 105%/130% "Courier New", courier, monospace;
 		background-color: #FFFFCC;
 	}
-	#txp_mka code.block {
+	#mka_ical code.block {
 		font-weight:normal;
 		border:1px dotted #999;
 		background-color: #FFFFCC;
@@ -426,7 +444,7 @@ if (0) {
 -->
 <!--
 # --- BEGIN PLUGIN HELP ---
-<div id="txp_mka">
+<div id="mka_ical">
 
 <h1>mka_ical - Help</h1>
 
@@ -437,11 +455,11 @@ The help section is not complete so if you have any questions please write a com
 
 
 <p>With the mka_ical plugin it is possible to display Events from iCal URL or File (e.g. Google Calendar).<br/>
-The plugin makes use of SG-iCalendar by Morten Fangel (http://github.com/fangel/SG-iCalendar)</p>
+The plugin makes use of SG-iCalendar by Morten Fangel (http://sevengoslings.net/icalendar)</p>
 <h2>How to use</h2>
 
 <h3>Example 1 (Using a public Google Calendar)</h3>
-<pre><code class="block">&lt;txp:mka_ical googlemail=&quot;YOURADDRESSNAME@googlemail.com&quot; /&gt;</code></pre>
+<pre class="block"><code class="block">&lt;txp:mka_ical googlemail=&quot;YOURADDRESSNAME@googlemail.com&quot; /&gt;</code></pre>
 <ul>
 	<li><strong>googlemail</strong>: Your GoogleMail address.</li>
 </ul>
@@ -449,22 +467,30 @@ The plugin makes use of SG-iCalendar by Morten Fangel (http://github.com/fangel/
 
 
 <h3>Example 2 (Using some options)</h3>
-<pre><code class="block">&lt;txp:mka_ical url=&quot;http://url.of.ics.file/calendar.ics&quot;
+<pre class="block"><code class="block">&lt;txp:mka_ical url=&quot;http://url.of.ics.file/calendar.ics&quot;
 	pastevents=&quot;1&quot;  limit=&quot;0&quot;
-	imgfolder=&quot;images/termine/&quot; defaultimage=&quot;images/termine/none.gif&quot; /&gt;</code></pre>
+	img=&quot;1&quot; imgfolder=&quot;images/termine/&quot; defaultimg=&quot;none.gif&quot; /&gt;</code></pre>
 <ul>
 	<li><strong>url</strong>: URL of a Calendar File</li>
 	<li><strong>pastevents</strong>: [0,1] Show past events?</li>
 	<li><strong>limit</strong>: [0,1,2,3,4,..] Show only X events</li>
+	<li><strong>img</strong>: [0,1] Show images?</li>
 	<li><strong>imgfolder</strong>: Where are the images?</li>
-	<li><strong>defaultimage</strong>: Path to the default image</li>
+	<li><strong>defaultimg</strong>: Name of the default image</li>
 </ul>
 <br/>
 
-<h2>Default template</h2>
-<pre><code class="block">&lt;span class="date"&gt;{date}&lt;/span&gt;
-&lt;span class="title"&gt;{title}&lt;/span&gt;
-&lt;span class="description"&gt;{description}&lt;/span&gt;
+<h2>Output</h2>
+<pre><code class="block">
+&lt;ul id=&quot;icalevents&quot;&gt;
+	&lt;li&gt;
+		[&lt;img src=&quot;images/image.png&quot; border=&quot;0&quot; /&gt;]
+		&lt;span class=&quot;date&quot;&gt;01.01.1111 11:11&lt;/span&gt;
+		&lt;span class=&quot;title&quot;&gt;TITLE&lt;/span&gt;
+		[&lt;p class=&quot;description&quot;&gt;DESCRIPTION&lt;/p&gt;]
+	&lt;/li&gt;
+	[...]
+&lt;/ul&gt;
 </code></pre>
 <br/>
 
@@ -493,7 +519,8 @@ The plugin makes use of SG-iCalendar by Morten Fangel (http://github.com/fangel/
 
 
 <h2>CSS Template</h2>
-<pre><code class="block">ul#icalevents {
+<pre><code class="block">
+ul#icalevents {
 }
 
 ul#icalevents li {
@@ -530,8 +557,8 @@ Display past events
 cssid (string, default: "icalevents", optional)
 Sets the id for the event list
 
-class
-Sets the CSS-Class for the event list
+details (boolean, default: TRUE, optional)
+Display the details
 
 cachingtime (int, default: 5 (minutes), optional)
 local caching
@@ -541,6 +568,9 @@ Format String for the Time (http://php.net/manual/function.strftime.php)
 
 fmtDate (string, default: "%d.%m.%Y", optional)
 Format String for the date (http://php.net/manual/function.strftime.php)
+
+img (boolean, default: FALSE)
+Display an image for each date (requires following attributes)
 
 imgfolder (string, default: "images", optional)
 image folder
