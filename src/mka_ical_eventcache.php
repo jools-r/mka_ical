@@ -27,7 +27,10 @@ function checkCache($urls, $cachingtime)
 function getEvents($urls)
 {
     $events = array();
-    $reader = new SG_iCal();
+
+    // Instantiate ICal() library
+    $reader = new TKr\ICal\ICal();
+
     foreach ($urls as $u) {
         $reader->setUrl($u, true);
         $e = $reader->getEvents();
