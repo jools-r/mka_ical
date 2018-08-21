@@ -181,7 +181,7 @@ function mka_ical($atts, $thing = '')
 
     }
 
-    return doWrap($out, $wraptag, $break, $class, '', '', '', $cssid);
+    return doWrap($out, $wraptag, $break, $class, '', '', '', $html_id);
 }
 
 // -------------------------------------------------------------
