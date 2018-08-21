@@ -1,7 +1,7 @@
 {
     "name"          : "mka_ical",
     "description"   : "Display events from an ical file (Google Calendar, etc.)",
-    "version"       : "0.7 beta",
+    "version"       : "0.7.0",
     "type"          : 0,
     "author"        : "Martin Kozianka + jcr",
     "author_uri"    : "http://github.com/jools-r/mka_ical",
@@ -13,8 +13,8 @@
                           "./docs/help.textile"
                       ]},
     "code"          : {"file" : [
-                          "./src/vendors/sgical/SG_iCal.php",
                           "./src/mka_ical.php",
-                          "./src/mka_ical_eventcache.php"
+                          "./src/mka_ical_eventcache.php",
+                          "./src/vendors/intouch/ical.php"
                       ]}
 }
