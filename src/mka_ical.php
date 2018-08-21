@@ -29,7 +29,8 @@ function mka_ical($atts, $thing = '')
         'html_id' => 'icalevents',
         'wraptag' => 'ul',
         'form' => ''
-    ), $atts));
+    ), $atts, false));
+
     // Cater for legacy cssid -> html_id
     // if cssid is specified and not default value, update html_id
     if ($cssid != $html_id) {
