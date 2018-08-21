@@ -174,6 +174,8 @@ function mka_ical($atts, $thing = '')
             $vals[] = $evt->des;
             $keys[] = '{location}';
             $vals[] = $evt->loc;
+            $keys[] = '{uid}';
+            $vals[] = $evt->uid;
 
             $out[] = parse(str_replace($keys, $vals, $body));
         }
