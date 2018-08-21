@@ -1,0 +1,141 @@
+
+h1. mka_ical - Help
+
+mka_ical is a Textpattern plugin for displaying events from an iCal URL (e.g. Google Calendar) or ics file using a standard or user-definable template.
+
+It's also possible to specify a folder or a Textpattern category for images referenced in the feed. The image is drawn from the title of the event and the name of the image.
+
+
+h2. Usage
+
+
+h3. Example 1 (using a public Google Calendar)
+
+bc. <txp:mka_ical googlemail="YOURADDRESSNAME@googlemail.com" />
+
+* *googlemail*: Your GoogleMail address or name.
+
+
+h3. Example 2 (using a custom url and additional options)
+
+bc.. <txp:mka_ical url="https://domain.com/url-of-ics-file/calendar.ics"
+	pastevents="1" limit="0"
+	img="1" imgfolder="images/events/" defaultimg="none.gif" />
+
+* *url*: URL of a calendar file
+* *pastevents*: [0,1] Show past events?
+* *limit*: [0,1,2,3,4,…] Show only X events
+* *img*: [0,1] Show images?
+* *imgfolder*: Where are the images?
+* *defaultimg*: Name of the default image
+
+
+h3. Example 3 (using mka_ical as a container tag)
+
+bc.. <txp:mka_ical wraptag="" break=""
+    googlemail="YOURADDRESSNAME@googlemail.com">
+	<div class="h-event"> <!-- microdata h-event -->
+		<h1 class="p-name">{title}</h1>
+		<p class="h-event__meta">
+			From <time class="dt-start" datetime="{start_datetime}">{start_date} {start_time}</time>
+		    to <time class="dt-end" datetime="{end_datetime}">{end_time}</time>
+		    at <span class="p-location">{location}</span>
+		</p>
+		<img class="event-img" src="{imagesrc}" border="0" align="left">
+		<p class="p-summary">{description}</p>
+		<a class="u-url" href="{event_url}">More information</a>
+	</div>
+</txp:mka_ical>
+
+
+h3. Standard output
+
+bc.. <span class="date">{date}</span>
+<span class="title">{title}</span>
+<span class="description">{description}</span>
+
+
+h2. Tag attributes
+
+*url* (string, default: "", required)
+Link to the ICS file
+
+*googlemail*
+GoogleMail address (calendar must be public)
+
+*limit* (int, default: @0@, optional)
+Defines how many events are shown. Defaults to 0 (means all)
+
+*pastevents* (boolean, default: @FALSE@, optional)
+Display past events
+
+*cssid* (string, default: @icalevents@, optional)
+Sets the id for the event list
+
+*class*
+Sets the CSS class for the event list
+
+*details* (boolean, default: @TRUE@, optional)
+Display the details
+
+*cachingtime* (int, default: @5@ (minutes), optional)
+local caching
+
+*fmtTime* (string, default: @%H:%M@, optional)
+Format string for the time
+
+*fmtDate* (string, default: @%d.%m.%Y@, optional)
+Format string for the date
+
+*img* (boolean, default: @FALSE@)
+Display an image for each date (requires following attributes)
+
+*imgfolder* (string, default: @images@, optional)
+Image folder
+
+*defaultimg* (string, default: @none.gif@, optional)
+Default image
+
+
+h2. Placeholder variables
+
+bc..
+; @{date}@
+: Date (format according to "fmtdate" and "fmttime" attributes)
+; @{start_datetime}@
+: Start datetime in @%Y-%m-%d %H:%M@ format
+; @{start_date}@
+: Start date (format according to "fmtdate" attribute)
+; @{start_time}@
+: Start time (format according to "fmttime" attribute)
+; @{end_datetime}@
+: End datetime in @%Y-%m-%d %H:%M@ format
+; @{end_date}@
+: End date (format according to "fmtdate" attribute)
+; @{end_time}@
+: End time (format according to "fmttime" attribute)
+; @{title}@
+: Title
+; @{description}@
+: Description
+; @{location}@
+: Location/venue
+; @{event_url}@
+: Link to event page
+; @{imagesrc}@
+: Link to image
+; @{imageid}@
+: ID# of image (when using images from categories)
+
+
+
+h2. Changelog
+
+* *0.6.3* – Debug details removed (Martin Kozianka)
+* *0.6.2* - Output the date with *strftime*. Resolve: error when displaying without image (Martin Kozianka)
+* *0.6.1* – First public version (Martin Kozianka)
+
+
+h2. Credits
+
+This plugin makes use of SG-iCalendar by Morten Fangel (http://sevengoslings.net/icalendar)
