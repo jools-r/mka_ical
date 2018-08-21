@@ -4,6 +4,7 @@
 if (class_exists('\Textpattern\Tag\Registry')) {
     Txp::get('\Textpattern\Tag\Registry')
         ->register('mka_ical')
+        ->register('mka_format_date')
         ->register('mka_if_first_event')
         ->register('mka_if_last_event')
     ;
@@ -135,10 +136,10 @@ function mka_ical($atts, $thing = '')
             $evt->loc = ical_formatText($evt->loc);
 
             $dateView  = ical_getDateView($evt, $fmtdate, $fmttime);
-            $startDatetime = ical_getDateTime($evt, "%Y-%m-%d %H:%M", 0);
+            $startDatetime = ical_getDateTime($evt, "%Y-%m-%d %H:%M", 0); // datetime format
             $startDate = ical_getDateTime($evt, $fmtdate, 0);
             $startTime = ical_getDateTime($evt, $fmttime, 0);
-            $endDatetime = ical_getDateTime($evt, "%Y-%m-%d %H:%M", 0);
+            $endDatetime = ical_getDateTime($evt, "%Y-%m-%d %H:%M", 0); // datetime format
             $endDate   = ical_getDateTime($evt, $fmtdate, 1);
             $endTime   = ical_getDateTime($evt, $fmttime, 1);
 
@@ -182,6 +183,25 @@ function mka_ical($atts, $thing = '')
     }
 
     return doWrap($out, $wraptag, $break, $class, '', '', '', $html_id);
+}
+
+// -------------------------------------------------------------
+
+/* Simple date reformatter */
+/* Use with {start_datetime} and {end_datetime} */
+/* date formats as per http://php.net/manual/en/function.strftime.php */
+
+function mka_format_date($atts, $thing = '')
+{
+    extract(lAtts(array(
+        'format' => ''
+    ), $atts, false));
+
+    if ($format === '') {
+        return $thing;
+    } else {
+        return strftime($format, strtotime($thing));
+    }
 }
 
 // -------------------------------------------------------------
