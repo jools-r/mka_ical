@@ -4,11 +4,14 @@
 if (class_exists('\Textpattern\Tag\Registry')) {
     Txp::get('\Textpattern\Tag\Registry')
         ->register('mka_ical')
+        ->register('mka_if_first_event')
+        ->register('mka_if_last_event')
     ;
 }
 
 function mka_ical($atts, $thing = '')
 {
+    global $mka_this_ical_event;
 
     extract(lAtts(array(
         'url' => '',
@@ -101,15 +104,30 @@ function mka_ical($atts, $thing = '')
     // Get events from cache
     $events = checkCache($urls, $cachingtime);
 
+    // Start counter
+    $count = 0;
+    // Get uid of last item
+    $last_event = end($events)->uid;
+
     // Loop through events
-    $i = 1;
     foreach ($events as $evt) {
 
         // TODO :: recurrence auswerten
 
         // Is event in future or ongoing?
-     // if (($evt->getEnd() > time()) && ($limit == 0  || $i <= $limit ))
-        if (($pastevents || $evt->end > time()) && ($limit == 0 || $i <= $limit)) {
+        // if (($evt->getEnd() > time()) && ($limit == 0  || $count < $limit ))
+        if (($pastevents || $evt->end > time()) && ($limit == 0 || $count < $limit)) {
+
+            // Advance counter
+            ++$count;
+
+            // First event
+            $mka_this_ical_event['is_first'] = ($count == '1');
+
+            // Last event in array or last in limit
+            if (($evt->uid == $last_event) || ($count == $limit)) {
+                $mka_this_ical_event['is_last'] = true;
+            }
 
             // TODO :: TextileRestricted($text, $lite = 1, $noimage = 1, $rel = 'nofollow')
             $evt->sum = ical_formatText($evt->sum);
@@ -159,15 +177,30 @@ function mka_ical($atts, $thing = '')
             $vals[] = $evt->url;
 
             $out[] = parse(str_replace($keys, $vals, $body));
-
-            $i++; // Count for attr limit
         }
+
     }
 
     return doWrap($out, $wraptag, $break, $class, '', '', '', $cssid);
 }
 
+// -------------------------------------------------------------
+function mka_if_first_event($atts, $thing = null)
+{
+    global $mka_this_ical_event;
+    $x = !empty($mka_this_ical_event['is_first']);
+    return isset($thing) ? parse($thing, $x) : $x;
+}
 
+// -------------------------------------------------------------
+function mka_if_last_event($atts, $thing = null)
+{
+    global $mka_this_ical_event;
+    $x = !empty($mka_this_ical_event['is_last']);
+    return isset($thing) ? parse($thing, $x) : $x;
+}
+
+// -------------------------------------------------------------
 function ical_img($title, $images, $defimg)
 {
     $search = array(" ", ".", "-");
