@@ -238,6 +238,8 @@ function ical_img($title, $images, $defimg)
 
 function ical_getDateView($evt, $fmt_date, $fmt_time)
 {
+    $date_separator = " – ";
+
     $fmt_dati = $fmt_date." ".$fmt_time;
     // event on one day
     if (date("dmY", $evt->start) == date("dmY", $evt->end-1)) {
@@ -245,10 +247,10 @@ function ical_getDateView($evt, $fmt_date, $fmt_time)
         if (date("H:i", $evt->start) == "00:00" && date("H:i", $evt->end) == "00:00") {
             $dateView = strftime($fmt_date, $evt->start);
         } else {
-            $dateView = strftime($fmt_dati, $evt->start)."-".strftime($fmt_time, $evt->start + $evt->duration);
+            $dateView = strftime($fmt_dati, $evt->start).$date_separator.strftime($fmt_time, $evt->start + $evt->duration);
         }
     } else {
-        $dateView  = strftime($fmt_date, $evt->start)."-".strftime($fmt_date, $evt->end-1);
+        $dateView  = strftime($fmt_date, $evt->start).$date_separator.strftime($fmt_date, $evt->end-1);
     }
     return $dateView;
 }
