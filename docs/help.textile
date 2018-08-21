@@ -1,76 +1,35 @@
 
 h1. mka_ical - Help
 
+h3. Display ical calendars as event lists
+
 mka_ical is a Textpattern plugin for displaying events from an iCal URL (e.g. Google Calendar) or ics file using a standard or user-definable template.
 
 It's also possible to specify a folder or a Textpattern category for images referenced in the feed. The image is drawn from the title of the event and the name of the image.
 
 
-h2. Usage
+h2. Tags
 
+h3. Tag: mka_ical
 
-h3. Example 1 (using a public Google Calendar)
+Inserts a public calendar from an ics url or file, or a googlemail account. Can be used as a standalone or as a container tag.
 
-bc. <txp:mka_ical googlemail="YOURADDRESSNAME@googlemail.com" />
-
-* *googlemail*: Your GoogleMail address or name.
-
-
-h3. Example 2 (using a custom url and additional options)
-
-bc.. <txp:mka_ical url="https://domain.com/url-of-ics-file/calendar.ics"
-	pastevents="1" limit="0"
-	img="1" imgfolder="images/events/" defaultimg="none.gif" />
-
-* *url*: URL of a calendar file
-* *pastevents*: [0,1] Show past events?
-* *limit*: [0,1,2,3,4,…] Show only X events
-* *img*: [0,1] Show images?
-* *imgfolder*: Where are the images?
-* *defaultimg*: Name of the default image
-
-
-h3. Example 3 (using mka_ical as a container tag)
-
-bc.. <txp:mka_ical wraptag="" break=""
-    googlemail="YOURADDRESSNAME@googlemail.com">
-	<div class="h-event"> <!-- microdata h-event -->
-		<h1 class="p-name">{title}</h1>
-		<p class="h-event__meta">
-			From <time class="dt-start" datetime="{start_datetime}">{start_date} {start_time}</time>
-		    to <time class="dt-end" datetime="{end_datetime}">{end_time}</time>
-		    at <span class="p-location">{location}</span>
-		</p>
-		<img class="event-img" src="{imagesrc}" border="0" align="left">
-		<p class="p-summary">{description}</p>
-		<a class="u-url" href="{event_url}">More information</a>
-	</div>
-</txp:mka_ical>
-
-
-h3. Standard output
-
-bc.. <span class="date">{date}</span>
-<span class="title">{title}</span>
-<span class="description">{description}</span>
-
-
-h2. Tag attributes
+The following attributes are available:
 
 *url* (string, default: "", required)
-Link to the ICS file
+Url of the ICS file
 
 *googlemail*
-GoogleMail address (calendar must be public)
+GoogleMail address. The user's public google calendar will automatically be referenced.
 
 *limit* (int, default: @0@, optional)
-Defines how many events are shown. Defaults to 0 (means all)
+Defines how many events are shown. Defaults to 0 (= all)
 
 *pastevents* (boolean, default: @FALSE@, optional)
 Display past events
 
-*cssid* (string, default: @icalevents@, optional)
-Sets the id for the event list
+*html_id* (string, default: @icalevents@, optional)
+Sets the html id for the event list
 
 *class*
 Sets the CSS class for the event list
@@ -78,13 +37,16 @@ Sets the CSS class for the event list
 *details* (boolean, default: @TRUE@, optional)
 Display the details
 
-*cachingtime* (int, default: @5@ (minutes), optional)
-local caching
+*cachingtime* (int, default: @30@ (minutes), optional)
+Duration that local cache file persists
 
-*fmtTime* (string, default: @%H:%M@, optional)
+*form* (string, default: none, optional)
+Name of txp form to use to format each event item
+
+*fmttime* (string, default: @%H:%M@, optional)
 Format string for the time
 
-*fmtDate* (string, default: @%d.%m.%Y@, optional)
+*fmtdate* (string, default: @%d.%m.%Y@, optional)
 Format string for the date
 
 *img* (boolean, default: @FALSE@)
@@ -97,9 +59,24 @@ Image folder
 Default image
 
 
+h3. Tag: mka_if_first_event
+
+Use as a container tag. The tag will execute the contained statements if the displayed event is the first in the currently displayed calendar.
+
+
+h3. Tag: mka_if_last_event
+
+Use as a container tag. The tag will execute the contained statements if the displayed event is the last in the currently displayed calendar.
+
+
+h3. Tag: mka_format_date
+
+The @fmtdate@ and @fmttime@ attributes of @mka_ical@ control how the placeholders {start_date}, {end_date} and {start_time} and {endtime} are formatted for the entire calendar.
+Use this tag to output a date with a custom date or time format using the date formatting parameters of "strftime":http://php.net/manual/en/function.strftime.php.
+
+
 h2. Placeholder variables
 
-bc..
 ; @{date}@
 : Date (format according to "fmtdate" and "fmttime" attributes)
 ; @{start_datetime}@
@@ -114,23 +91,100 @@ bc..
 : End date (format according to "fmtdate" attribute)
 ; @{end_time}@
 : End time (format according to "fmttime" attribute)
+; @{duration}@
+: Duration (formatted as days:hours:minutes:seconds)
 ; @{title}@
-: Title
+: Title (ics summary entry)
 ; @{description}@
 : Description
 ; @{location}@
 : Location/venue
-; @{event_url}@
-: Link to event page
+; @{uid}@
+: Event unique ID
 ; @{imagesrc}@
 : Link to image
 ; @{imageid}@
 : ID# of image (when using images from categories)
 
 
+h2. Examples
+
+
+h3. Example 1 (using a public Google Calendar)
+
+bc. <txp:mka_ical googlemail="YOURADDRESSNAME@googlemail.com" />
+
+* *googlemail*: Your GoogleMail address or name.
+
+
+h3. Example 2 (using a custom url and additional options)
+
+bc. <txp:mka_ical url="https://domain.com/url-of-ics-file/calendar.ics"
+    pastevents="1" img="1" imgfolder="images/events/" defaultimg="none.gif" />
+
+* *url*: URL of a calendar file
+* *pastevents*: [0,1] Show past events?
+* *limit*: [0,1,2,3,4,…] Show only X events
+* *img*: [0,1] Show images?
+* *imgfolder*: Where are the images?
+* *defaultimg*: Name of the default image
+
+
+h3. Example 3 (mka_ical as a container tag)
+
+bc.. <txp:mka_ical wraptag="" break=""
+    googlemail="YOURADDRESSNAME@googlemail.com">
+    <div class="h-event"> <!-- microdata h-event -->
+    <h1 class="p-name">{title}</h1>
+    <p class="h-event__meta">
+    From <time class="dt-start" datetime="{start_datetime}">{start_date} {start_time}</time>
+        to <time class="dt-end" datetime="{end_datetime}">{end_time}</time>
+        at <span class="p-location">{location}</span>
+    </p>
+    <img class="event-img" src="{imagesrc}" border="0" align="left">
+    <p class="p-summary">{description}</p>
+    <a class="u-url" href="{event_url}">More information</a>
+    </div>
+</txp:mka_ical>
+
+h3. Example 4 (month year headings using if_different and mka_format_date)
+
+bc.. <txp:mka_ical url="calendar.ics" wraptag="" break="">
+    <txp:variable name="month_year"><txp:mka_format_date format="%B %Y">{start_date}</txp:mka_format_date></txp:variable>
+    <txp:if_different><txp:variable name="month_year" wraptag="h2" /></txp:if_different>
+    <div class="h-event">
+        <p class="h-event__meta">
+            <time class="dt-start" datetime="{start_datetime}">{start_date}</time> –
+            <time class="dt-end" datetime="{end_datetime}">{end_time}</time>,
+            <span class="p-location">{location}</span>
+        </p>
+        <txp:evaluate wraptag="p" class="description">{description}</txp:evaluate>
+    </div>
+</txp:mka_ical>
+
+
+h3. Standard output
+
+bc.. <span class="date">{date}</span>
+<span class="title">{title}</span>
+<span class="description">{description}</span>
+
 
 h2. Changelog
 
+* *0.7.0* – Textpattern v4.7 and php 7 compatibility (jools-r)
+** Plugin cleanup and reconfiguration for rah_blobin/plugin compiler
+** Inclusion of updated ical parser library (php5.6+ compatibility) in plugin
+** Updated google calendar URL
+** New 'mka_if_first_event' tag
+** New 'mka_if_last_event' tag
+** New 'mka_format_date' tag
+** Tag registration for Txp 4.6+
+** Updated help
+** Additional replacement placeholders
+** Attribute 'cssid' renamed to 'html_id' in line with other txp tags (cssid still accepted for now)
+** New 'googlemaildomain' attribute if using just google username but need to use 'gmail' rather than 'googlemail' (default setting)
+** Cached json file now located in /tmp folder (as defined in prefs), not /files
 * *0.6.3* – Debug details removed (Martin Kozianka)
 * *0.6.2* - Output the date with *strftime*. Resolve: error when displaying without image (Martin Kozianka)
 * *0.6.1* – First public version (Martin Kozianka)
@@ -138,4 +192,6 @@ h2. Changelog
 
 h2. Credits
 
-This plugin makes use of SG-iCalendar by Morten Fangel (http://sevengoslings.net/icalendar)
+This plugin was originally the work of Martin Kozianka ("kozianka.de":https://kozianka.de) and has since been updated to work with Textpattern 4.7+.
+
+It makes use of the ICal parsing library "TKr/intouch-iCalendar":https://github.com/TKr/intouch-iCalendar which is a fork of "intouch-iCalendar":https://github.com/mfkahn/intouch-iCalendar which is in turn based on "SG-iCalendar":http://sevengoslings.net/icalendar by Morten Fangel.
