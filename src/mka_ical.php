@@ -10,6 +10,7 @@ if (class_exists('\Textpattern\Tag\Registry')) {
     ;
 }
 
+// -------------------------------------------------------------
 function mka_ical($atts, $thing = '')
 {
     global $mka_this_ical_event;
@@ -41,10 +42,10 @@ function mka_ical($atts, $thing = '')
     }
 
     if (strlen($thing) > 0) {
-		// Use contained code
+        // Use contained code
         $body = $thing;
     } elseif (!empty($form)) {
-		// OR: Get form if specified
+        // OR: Get form if specified
         $body = fetch_form($form);
     } else {
         // ELSE: Default output
@@ -236,7 +237,7 @@ function ical_img($title, $images, $defimg)
     return $defimg;
 }
 
-
+// -------------------------------------------------------------
 function ical_getDateView($evt, $fmt_date, $fmt_time)
 {
     $date_separator = " – ";
@@ -256,12 +257,14 @@ function ical_getDateView($evt, $fmt_date, $fmt_time)
     return $dateView;
 }
 
+// -------------------------------------------------------------
 function ical_getDateTime($evt, $formatter, $end)
 {
     $dateView = ($end == 1) ? strftime($formatter, $evt->end) : strftime($formatter, $evt->start);
     return $dateView;
 }
 
+// -------------------------------------------------------------
 function mka_makearr_sql($str, $type='string', $delimeter =',')
 {
     $ret = array();
@@ -276,6 +279,7 @@ function mka_makearr_sql($str, $type='string', $delimeter =',')
     return $ret;
 }
 
+// -------------------------------------------------------------
 function mka_imgarrayfromcat($cats)
 {
     $imgs = array();
@@ -296,6 +300,7 @@ function mka_imgarrayfromcat($cats)
     return $imgs;
 }
 
+// -------------------------------------------------------------
 function mka_imgarrayfromfolder($imgfolder)
 {
     $imgs = array();
@@ -315,7 +320,7 @@ function mka_imgarrayfromfolder($imgfolder)
     return $imgs;
 }
 
-
+// -------------------------------------------------------------
 function ical_defimg($defimg)
 {
     $url = "http://".$GLOBALS['prefs']["siteurl"]."/";
@@ -338,6 +343,7 @@ function ical_defimg($defimg)
     return $img;
 }
 
+// -------------------------------------------------------------
 function ical_shorten_link($string)
 {
     $text_word_maxlength = 55;
@@ -355,6 +361,7 @@ function ical_shorten_link($string)
     return $pre."<a href=\"".$url."\">".$shortened_url."</a>";
 }
 
+// -------------------------------------------------------------
 function ical_formatText($string)
 {
     $string = ' ' . $string;

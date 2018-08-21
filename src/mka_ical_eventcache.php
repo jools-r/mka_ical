@@ -1,5 +1,6 @@
 <?php
 
+// -------------------------------------------------------------
 function checkCache($urls, $cachingtime)
 {
     $hash = md5(implode(",", $urls));
@@ -24,6 +25,7 @@ function checkCache($urls, $cachingtime)
     }
 }
 
+// -------------------------------------------------------------
 function getEvents($urls)
 {
     $events = array();
@@ -45,6 +47,7 @@ function getEvents($urls)
     return $events;
 }
 
+// -------------------------------------------------------------
 function getPlainEvent($evt)
 {
     $plainEvent = array();
@@ -68,6 +71,7 @@ function getPlainEvent($evt)
     return $plainEvent;
 }
 
+// -------------------------------------------------------------
 function getPlainRec($rec)
 {
     $r = new stdClass;
@@ -81,6 +85,7 @@ function getPlainRec($rec)
     return $r;
 }
 
+// -------------------------------------------------------------
 function cmp_event($a, $b)
 {
     $da = $a->start;
