@@ -174,8 +174,6 @@ function mka_ical($atts, $thing = '')
             $vals[] = $evt->des;
             $keys[] = '{location}';
             $vals[] = $evt->loc;
-            $keys[] = '{event_url}';
-            $vals[] = $evt->url;
 
             $out[] = parse(str_replace($keys, $vals, $body));
         }
