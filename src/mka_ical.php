@@ -15,7 +15,7 @@ function mka_ical($atts, $thing = '')
         'url' => '',
         'cachingtime' => 30,
         'googlemail' => '',
-		'googlemaildomain' => 'googlemail',
+        'googlemaildomain' => 'googlemail',
         'limit' => 0,
         'pastevents' => false,
         'fmttime' => '%H:%M',
@@ -53,15 +53,15 @@ function mka_ical($atts, $thing = '')
     // Get url from googlemail-address
     if (strlen($googlemail) > 0) {
         $tmp = explode("@", $googlemail);
-		if (count($tmp > 1)) {
-			// Full email address: just encode '@' to '%40'
-			$gmail = rawurlencode($googlemail);
-		} else {
-			// Just username: construct email using attribute "googlemaildomain" (e.g. googlemail / gmail)
-			$gmail = $tmp[0]."%40".$googlemaildomain.".com";
-		}
+        if (count($tmp > 1)) {
+            // Full email address: just encode '@' to '%40'
+            $gmail = rawurlencode($googlemail);
+        } else {
+            // Just username: construct email using attribute "googlemaildomain" (e.g. googlemail / gmail)
+            $gmail = $tmp[0]."%40".$googlemaildomain.".com";
+        }
 //      $urls[] = "https://www.google.com/calendar/ical/".$gmail."/public/basic.ics";
-		$urls[] = "https://calendar.google.com/calendar/ical/".$gmail."/public/basic.ics";
+        $urls[] = "https://calendar.google.com/calendar/ical/".$gmail."/public/basic.ics";
     }
 
     // Add given urls from attribute url
