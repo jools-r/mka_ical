@@ -9,7 +9,6 @@ if (class_exists('\Textpattern\Tag\Registry')) {
 
 function mka_ical($atts, $thing = '')
 {
-    global $txpcfg;
 
     extract(lAtts(array(
         'url' => '',
