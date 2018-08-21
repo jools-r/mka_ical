@@ -61,18 +61,24 @@ Default image
 
 h3. Tag: mka_if_first_event
 
-Use as a container tag. The tag will execute the contained statements if the displayed event is the first in the currently displayed calendar.
+Use as a container tag. The tag will execute the contained statements if the displayed event is the _first_ in the currently displayed calendar.
 
 
 h3. Tag: mka_if_last_event
 
-Use as a container tag. The tag will execute the contained statements if the displayed event is the last in the currently displayed calendar.
+Use as a container tag. The tag will execute the contained statements if the displayed event is the _last_ in the currently displayed calendar.
 
 
 h3. Tag: mka_format_date
 
-The @fmtdate@ and @fmttime@ attributes of @mka_ical@ control how the placeholders {start_date}, {end_date} and {start_time} and {endtime} are formatted for the entire calendar.
-Use this tag to output a date with a custom date or time format using the date formatting parameters of "strftime":http://php.net/manual/en/function.strftime.php.
+Use as a container tag around an existing date, time or datetime placeholder. The tag will reformat the date or time output according to a specified format. 
+
+Attribute:
+
+*format* (date parameter, default: empty)
+Use the date formatting parameters of "strftime":http://php.net/manual/en/function.strftime.php to define the date and/or time format.
+
+_Note: The @fmtdate@ and @fmttime@ attributes of @mka_ical@ control how the placeholders @{start_date}@, @{end_date}@ and @{start_time}@ and @{endtime}@ are formatted for the entire calendar. This tag allows you to override the date or time format._
 
 
 h2. Placeholder variables
