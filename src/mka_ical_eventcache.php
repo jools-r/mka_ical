@@ -47,7 +47,7 @@ function getEvents($urls)
 
 function getPlainEvent($evt)
 {
-    $plainEvents = array();
+    $plainEvent = array();
 
     $plainEvent = new stdClass;
     $plainEvent->start     = $evt->getStart();
@@ -56,7 +56,7 @@ function getPlainEvent($evt)
     $plainEvent->sum       = $evt->getSummary();
     $plainEvent->des       = $evt->getDescription();
     $plainEvent->loc       = $evt->getLocation();
-    $plainEvent->url       = $evt->getEventUrl();
+    $plainEvent->uid       = $evt->getUID();
 
     $rec = $evt->getProperty('recurrence');
     if ($rec === null) {
