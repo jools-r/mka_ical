@@ -142,8 +142,7 @@ function mka_ical($atts, $thing = '')
             $endDatetime = ical_getDateTime($evt, "%Y-%m-%d %H:%M", 0); // datetime format
             $endDate   = ical_getDateTime($evt, $fmtdate, 1);
             $endTime   = ical_getDateTime($evt, $fmttime, 1);
-
-
+            $duration  = gmdate("z:H:i:s", $evt->duration); // convert seconds to days:hours:minutes:seconds
 
             $keys = array();
             $vals = array();
@@ -168,6 +167,8 @@ function mka_ical($atts, $thing = '')
             $vals[] = $endDate;
             $keys[] = '{end_time}';
             $vals[] = $endTime;
+            $keys[] = '{duration}';
+            $vals[] = $duration;
             $keys[] = '{title}';
             $vals[] = $evt->sum;
             $keys[] = '{description}';
