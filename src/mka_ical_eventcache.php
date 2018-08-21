@@ -31,7 +31,7 @@ function getEvents($urls)
     $events = array();
 
     // Instantiate ICal() library
-    $reader = new TKr\ICal\ICal();
+    $reader = new ICal();
 
     foreach ($urls as $u) {
         $reader->setUrl($u, true);

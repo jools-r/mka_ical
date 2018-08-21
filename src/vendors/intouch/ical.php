@@ -10,8 +10,6 @@
  *
  */
 
-namespace TKr\ICal;
-
 define('SG_ICALREADER_VERSION', '0.8.0');
 
 /**
@@ -211,7 +209,7 @@ class Duration
 }
 
 // namespace TKr\ICal;
-use ArrayObject;
+// use ArrayObject;
 
 /**
  * A simple Factory for converting a section/data pair into the
@@ -237,7 +235,7 @@ class Factory
      * @param $section string
      * @param intouch\ical\Line[]
      */
-    public static function factory( ICal $ical, $section, $data )
+    public static function portal( ICal $ical, $section, $data )
     {
         switch ($section) {
             case "vcalendar":
@@ -868,10 +866,10 @@ class Freq
 
 // namespace TKr\ICal;
 
-use \ArrayAccess;
-use ArrayIterator;
-use \Countable;
-use \IteratorAggregate;
+// use \ArrayAccess;
+// use ArrayIterator;
+// use \Countable;
+// use \IteratorAggregate;
 
 /**
  * A class for storing a single (complete) line of the ICal file.
@@ -1217,7 +1215,7 @@ class Parser
      */
     protected static function storeSection( $section, $data, ICal $ical )
     {
-        $data = Factory::factory($ical, $section, $data);
+        $data = Factory::portal($ical, $section, $data);
         switch ($section) {
             case 'vcalendar':
                 return $ical->setCalendarInfo( $data );
@@ -1263,7 +1261,7 @@ class Parser
 }
 
 // namespace TKr\ICal;
-use Exception;
+// use Exception;
 
 /**
  *
@@ -1357,7 +1355,7 @@ class Query
 
 // namespace TKr\ICal;
 
-use \DateTime;
+// use \DateTime;
 
 /**
  * A wrapper for recurrence rules in iCalendar.  Parses the given line and puts the
@@ -1600,7 +1598,7 @@ class Recurrence
 // namespace TKr\ICal;
 
 //use ArrayIterator;
-//use \IteratorAggregate;
+//// use \IteratorAggregate;
 
 /**
  * The wrapper for the main vcalendar data. Used instead of ArrayObject
@@ -1978,7 +1976,7 @@ class VEvent
 
 // namespace TKr\ICal;
 // use DateTime;
-use DateTimeZone;
+// use DateTimeZone;
 
 /**
  * The wrapper for vtimezones. Stores the timezone-id and the setup for
