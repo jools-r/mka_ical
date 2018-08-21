@@ -7,6 +7,7 @@ if (class_exists('\Textpattern\Tag\Registry')) {
         ->register('mka_format_date')
         ->register('mka_if_first_event')
         ->register('mka_if_last_event')
+        ->register('mka_if_different')
     ;
 }
 
@@ -220,6 +221,21 @@ function mka_if_last_event($atts, $thing = null)
     global $mka_this_ical_event;
     $x = !empty($mka_this_ical_event['is_last']);
     return isset($thing) ? parse($thing, $x) : $x;
+}
+
+// -------------------------------------------------------------
+function mka_if_different($atts, $thing)
+{
+    static $last = array();
+
+    extract(lAtts(array('key' => md5($thing)), $atts));
+    $out = parse($thing, 1);
+
+    if (empty($last[$key]) || $out != $last[$key]) {
+        return $last[$key] = $out;
+    } else {
+        return parse($thing, 0);
+    }
 }
 
 // -------------------------------------------------------------
